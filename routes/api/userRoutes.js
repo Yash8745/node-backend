@@ -1,5 +1,8 @@
 const express = require('express');
+const axios = require('axios');
 const { createUser, findUser, comparePasswords } = require('../../db/function/userFunction');
+
+
 const router = express.Router();
 
 module.exports = (database) => {
@@ -11,7 +14,7 @@ module.exports = (database) => {
     const normalizedUsername = username.toLowerCase(); 
     
     try {
-      await createUser(usersCollection, normalizedUsername, password,email,uuid); // Create user with normalized username
+      await createUser(usersCollection, normalizedUsername, password,email,uuid); 
       res.status(201).send("User registered successfully!");
     } catch (error) {
       console.error("Signup error:", error); // Log error for easier debugging
@@ -26,15 +29,22 @@ router.post('/login', async (req, res) => {
   
   const normalizedUsername = username.toLowerCase(); 
   try {
-    const user = await findUser(usersCollection, normalizedUsername); // Search for the user in the database
+    const user = await findUser(usersCollection, normalizedUsername); 
     console.log("User found in DB:", user); 
     if (!user) {
-      return res.status(401).send("User not found!"); // Respond if user not found
+      return res.status(401).send("User not found!"); 
     }
 
     const isMatch = await comparePasswords(password, user.password); // Compare password hashes
     if (!isMatch) {
       return res.status(401).send("Invalid password!"); // Respond if password is incorrect
+    }
+    try{
+      const response = await axios.post('http://127.0.0.1:5000/user', user);
+      console.log(response.data);
+    }
+    catch (err){
+      console.error(err);
     }
 
     res.json({
@@ -47,5 +57,7 @@ router.post('/login', async (req, res) => {
     res.status(500).send("Error during login."); 
   }
 });
+
+
   return router;
 };
