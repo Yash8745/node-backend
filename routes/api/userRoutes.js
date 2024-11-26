@@ -7,11 +7,11 @@ module.exports = (database) => {
 
   // Signup route
   router.post('/signup', async (req, res) => {
-    const { username, password } = req.body;
-    const normalizedUsername = username.toLowerCase(); // Normalize the username for consistent storage
+    const { username, email,password, uuid } = req.body;
+    const normalizedUsername = username.toLowerCase(); 
     
     try {
-      await createUser(usersCollection, normalizedUsername, password); // Create user with normalized username
+      await createUser(usersCollection, normalizedUsername, password,email,uuid); // Create user with normalized username
       res.status(201).send("User registered successfully!");
     } catch (error) {
       console.error("Signup error:", error); // Log error for easier debugging
@@ -22,12 +22,12 @@ module.exports = (database) => {
  // Login route
 router.post('/login', async (req, res) => {
   const { username, password } = req.body;
-  console.log("Incoming username:", username);  // Logs the incoming email for debugging
+  console.log("Incoming username:", username);  
   
-  const normalizedUsername = username.toLowerCase(); // Normalize username
+  const normalizedUsername = username.toLowerCase(); 
   try {
     const user = await findUser(usersCollection, normalizedUsername); // Search for the user in the database
-    console.log("User found in DB:", user); // Logs the user found in the database
+    console.log("User found in DB:", user); 
     if (!user) {
       return res.status(401).send("User not found!"); // Respond if user not found
     }
@@ -37,14 +37,15 @@ router.post('/login', async (req, res) => {
       return res.status(401).send("Invalid password!"); // Respond if password is incorrect
     }
 
-    res.send("Login successful!"); // Respond with success message
+    res.json({
+      uuid: user.uuid,
+      username: user.username,
+      email: user.email
+    }); 
   } catch (error) {
-    console.error("Login error:", error); // Log error for debugging
-    res.status(500).send("Error during login."); // Respond with error message
+    console.error("Login error:", error); 
+    res.status(500).send("Error during login."); 
   }
 });
-
-
-
   return router;
 };

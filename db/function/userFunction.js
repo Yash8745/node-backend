@@ -1,9 +1,9 @@
 const bcrypt = require('bcryptjs');
 
 // Create user function using email
-async function createUser(usersCollection, username, password) {
+async function createUser(usersCollection, username, password,email,uuid) {
   const hashedPassword = await bcrypt.hash(password, 10);
-  const user = { username, password: hashedPassword }; // store username
+  const user = { username, password: hashedPassword ,email , uuid,}; // store username
   await usersCollection.insertOne(user);
 }
 
