@@ -89,7 +89,7 @@ Follow these steps to set up the **Node Backend** project locally:
 Once you have the **ai-app** and **node-backend** set up, you will have a fully functional application where the **frontend** interacts with both the **AI backend** and **Node backend**:
 
 ### **AI Frontend**: The user interface of the Memopin project.
-   - Repository URL: [ai-backend](https://github.com/Yash8745/ai-app)
+   - Repository URL: [ai-app](https://github.com/Yash8745/ai-app)
 
 ### 2. **AI Backend** Repository
 The AI backend is responsible for handling audio processing, Pinecone integration, and memory-related functionality.
